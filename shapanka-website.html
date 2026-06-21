@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matthew S. Shapanka</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:      #1e3a5f;
+      --accent-hover:#2d5491;
+      --black:       #111111;
+      --gray-dark:   #333333;
+      --gray-mid:    #666666;
+      --gray-light:  #999999;
+      --border:      #e0e0e0;
+      --bg:          #ffffff;
+      --bg-alt:      #f6f6f6;
+      --serif:       Georgia, 'Times New Roman', Times, serif;
+      --sans:        -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      color: var(--black);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: normal;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    h2 { font-size: 1.65rem; margin-bottom: 1.75rem; }
+    h3 { font-size: 1rem; }
+
+    p { color: var(--gray-dark); }
+    p + p { margin-top: 0.9rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 5rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Navigation ─────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+    }
+
+    .nav-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-mid);
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    #home {
+      padding: 6rem 0 5.5rem;
+      border-top: none;
+    }
+
+    .eyebrow {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-name { margin-bottom: 1.1rem; }
+
+    .hero-tagline {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--gray-mid);
+      font-style: italic;
+      margin-bottom: 2.2rem;
+      max-width: 560px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.6rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      border-radius: 2px;
+      transition: background 0.15s;
+    }
+
+    .btn:hover { background: var(--accent-hover); text-decoration: none; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      margin-left: 0.75rem;
+    }
+
+    .btn-outline:hover { background: var(--accent); color: #fff; }
+
+    /* ── About ──────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Publications ───────────────────────────────────────── */
+    .pub-list { list-style: none; }
+
+    .pub-item {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pub-item:first-child { border-top: 1px solid var(--border); }
+
+    .pub-meta {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-light);
+      margin-bottom: 0.35rem;
+    }
+
+    .pub-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--black);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .pub-title:hover { color: var(--accent); text-decoration: none; }
+
+    .pub-desc {
+      font-size: 0.88rem;
+      color: var(--gray-mid);
+      margin: 0;
+    }
+
+    /* ── CV ─────────────────────────────────────────────────── */
+    .cv-block { margin-bottom: 2.8rem; }
+
+    .cv-heading {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gray-light);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .cv-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .cv-year {
+      font-size: 0.83rem;
+      color: var(--gray-light);
+      padding-top: 0.1rem;
+    }
+
+    .cv-content h3 {
+      font-size: 0.97rem;
+      margin-bottom: 0.15rem;
+      font-family: var(--sans);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .cv-content p {
+      font-size: 0.88rem;
+      color: var(--gray-mid);
+      margin: 0;
+    }
+
+    /* ── Speaking ───────────────────────────────────────────── */
+    .events-list { list-style: none; }
+
+    .event-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .event-item:first-child { border-top: 1px solid var(--border); }
+
+    .event-date {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gray-light);
+      padding-top: 0.15rem;
+    }
+
+    .event-title {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--black);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .event-venue {
+      font-size: 0.85rem;
+      color: var(--gray-mid);
+    }
+
+    /* ── Contact ────────────────────────────────────────────── */
+    #contact { background: var(--bg-alt); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.7fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-block { margin-bottom: 1.75rem; }
+
+    .contact-block h3 {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gray-light);
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-block p,
+    .contact-block a {
+      font-size: 0.93rem;
+      color: var(--gray-dark);
+    }
+
+    .social-list { list-style: none; }
+
+    .social-list li { margin-bottom: 0.55rem; }
+
+    .social-list a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.9rem;
+      color: var(--gray-mid);
+      transition: color 0.15s;
+    }
+
+    .social-list a:hover { color: var(--accent); text-decoration: none; }
+
+    .social-icon {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--gray-mid);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: var(--sans);
+      font-size: 0.93rem;
+      color: var(--black);
+      background: #fff;
+      -webkit-appearance: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    textarea { height: 130px; resize: vertical; }
+
+    button[type="submit"] {
+      padding: 0.68rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button[type="submit"]:hover { background: var(--accent-hover); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--gray-light);
+      margin: 0;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .nav-name { display: none; }
+      .nav-links { gap: 1.1rem; }
+
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo { aspect-ratio: 4 / 3; }
+
+      .cv-row { grid-template-columns: 1fr; gap: 0.2rem; }
+      .cv-year { padding-top: 0; }
+
+      .event-item { grid-template-columns: 1fr; gap: 0.2rem; }
+
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      section { padding: 3.5rem 0; }
+      #home { padding: 4rem 0 3.5rem; }
+
+      .btn-outline { margin-left: 0; margin-top: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV ══════════════════════════════ -->
+<nav>
+  <div class="container">
+    <span class="nav-name">Matthew S. Shapanka</span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#speaking">Speaking</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ══════════════════════ HERO ═════════════════════════════ -->
+<section id="home">
+  <div class="container">
+    <p class="eyebrow">Attorney and Tech Policy Professional</p>
+    <h1 class="hero-name">Matthew S. Shapanka</h1>
+    <p class="hero-tagline">Practicing at the intersection of law, policy, and the public interest.</p>
+    <a href="#contact" class="btn">Get in Touch</a>
+    <a href="#cv" class="btn btn-outline">View CV</a>
+  </div>
+</section>
+
+<!-- ══════════════════════ ABOUT ════════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <p class="section-label">About</p>
+    <h2>Bio</h2>
+    <div class="about-grid">
+      <div>
+        <img src="assets/shapanka-photo.jpeg" alt="Matthew S. Shapanka" class="about-photo">
+      </div>
+      <div>
+        <p>Matthew S. Shapanka is Of Counsel at <a href="https://www.cov.com/en/professionals/s/matthew-shapanka" target="_blank" rel="noopener noreferrer">Covington &amp; Burling LLP</a>. He advises clients on technology policy and regulation, U.S. political law compliance and enforcement, and congressional investigations and crisis management, bringing a rigorous analytical approach to complex legal and regulatory challenges.</p>
+        <p>Matthew previously served as Chief Counsel to the United States Senate Committee on Rules and Administration, where he negotiated the landmark bipartisan Electoral Count Reform Act — legislation that updated presidential election certification procedures for the first time in nearly 140 years. He also oversaw the Committee’s bipartisan January 6th investigation, developing protocols that resulted in unanimous passage of new Capitol security legislation.</p>
+        <p>Matthew holds a J.D. from Harvard Law School and a B.A., magna cum laude in Political Science from Tufts University. He is admitted to practice law in California, the District of Columbia, and Massachusetts, and before the United States Supreme Court, the U.S. District Courts for the District of Massachusetts and the Northern District of California, and the United States Courts of Appeals for the First and Tenth Circuits.</p>
+        <p>Outside of practice, Matthew writes and speaks on topics including artificial intelligence, U.S. democracy, and intellectual property law. His work has appeared in <em>The Federal Lawyer</em> and <em>Technology &amp; Innovation</em>, and he has presented at conferences and institutions across the country.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ WRITING ══════════════════════════ -->
+<section id="writing">
+  <div class="container">
+    <p class="section-label">Writing</p>
+    <h2>Publications</h2>
+    <ul class="pub-list">
+
+      <li class="pub-item">
+        <p class="pub-meta">Analysis &middot; December 2024</p>
+        <a class="pub-title" href="https://www.globalpolicywatch.com/2024/12/u-s-ai-policy-expectations-in-the-trump-administration-gop-congress-and-the-states/" target="_blank" rel="noopener noreferrer">U.S. AI Policy Expectations in the Trump Administration, GOP Congress, and the States</a>
+        <p class="pub-desc">With August Gweon, Holly Fechner &amp; Yaron Dori. <em>Global Policy Watch</em>, Dec. 18, 2024.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Analysis &middot; November 2024</p>
+        <a class="pub-title" href="https://www.globalpolicywatch.com/2024/11/tech-policy-in-a-second-trump-administration-ai-promotion-and-further-decoupling-from-china/" target="_blank" rel="noopener noreferrer">Tech Policy in a Second Trump Administration: AI Promotion and Further Decoupling from China</a>
+        <p class="pub-desc">With Holly Fechner &amp; Samuel Klein. <em>Global Policy Watch</em>, Nov. 19, 2024.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Legal Analysis &middot; May 2024</p>
+        <a class="pub-title" href="https://www.law360.com/articles/1835608/what-cra-deadline-means-for-biden-admin-rulemaking" target="_blank" rel="noopener noreferrer">What CRA Deadline Means for Biden Admin. Rulemaking</a>
+        <p class="pub-desc">With Holly Fechner &amp; Abby Rickeman. <em>Law360</em>, May 10, 2024.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Analysis &middot; May 2024</p>
+        <a class="pub-title" href="https://www.globalpolicywatch.com/2024/05/colorado-becomes-the-first-state-to-pass-comprehensive-ai-legislation/" target="_blank" rel="noopener noreferrer">Colorado Becomes the First State to Pass Comprehensive AI Legislation</a>
+        <p class="pub-desc">With August Gweon. <em>Global Policy Watch</em>, May 9, 2024.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Client Alert &middot; October 2023</p>
+        <a class="pub-title" href="https://www.cov.com/en/news-and-insights/insights/2023/10/us-artificial-intelligence-policy-legislative-and-regulatory-developments" target="_blank" rel="noopener noreferrer">U.S. Artificial Intelligence Policy: Legislative and Regulatory Developments</a>
+        <p class="pub-desc">With Holly Fechner. <em>Covington Client Alert</em>, Oct. 20, 2023.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Analysis &middot; September 2020</p>
+        <a class="pub-title" href="https://www.insidepoliticallaw.com/2020/09/10/d-c-circuits-mcgahn-ruling-eliminates-key-house-option-for-subpoena-enforcement/" target="_blank" rel="noopener noreferrer">D.C. Circuit’s <em>McGahn</em> Ruling Eliminates Key House Option for Subpoena Enforcement</a>
+        <p class="pub-desc"><em>Inside Political Law</em>, Sept. 10, 2020.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Peer-Reviewed Article &middot; 2018</p>
+        <span class="pub-title">Closing Diversity Gaps in Innovation: Gender, Race, and Income Disparities in Patenting and Commercialization of Inventions</span>
+        <p class="pub-desc">With Holly Fechner. <em>Technology &amp; Innovation</em>, Vol. 19, No. 4 (National Academy of Inventors), June 2018, at 727–734.</p>
+      </li>
+
+      <li class="pub-item">
+        <p class="pub-meta">Journal Article &middot; 2009</p>
+        <span class="pub-title">The Crime of Terrorism: Military and Civilian Approaches to Prosecuting Terrorists</span>
+        <p class="pub-desc"><em>The Federal Lawyer</em>, Vol. 56 (Sept. 2009), at 32–39.</p>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════ CV ════════════════════════════════ -->
+<section id="cv">
+  <div class="container">
+    <p class="section-label">Résumé</p>
+    <h2>Curriculum Vitae</h2>
+
+    <div class="cv-block">
+      <p class="cv-heading">Experience</p>
+
+      <div class="cv-row">
+        <span class="cv-year">2026 – Present</span>
+        <div class="cv-content">
+          <h3>Of Counsel</h3>
+          <p>Covington &amp; Burling LLP &middot; Washington, D.C. &amp; San Francisco, CA</p>
+        </div>
+      </div>
+
+      <div class="cv-row">
+        <span class="cv-year">2023 – 2026</span>
+        <div class="cv-content">
+          <h3>Special Counsel</h3>
+          <p>Covington &amp; Burling LLP &middot; Washington, D.C. &amp; San Francisco, CA</p>
+        </div>
+      </div>
+
+      <div class="cv-row">
+        <span class="cv-year">2021 – 2023</span>
+        <div class="cv-content">
+          <h3>Chief Counsel</h3>
+          <p>U.S. Senate Committee on Rules and Administration &middot; Washington, D.C.</p>
+        </div>
+      </div>
+
+      <div class="cv-row">
+        <span class="cv-year">2014 – 2021</span>
+        <div class="cv-content">
+          <h3>Senior Associate Attorney</h3>
+          <p>Covington &amp; Burling LLP &middot; Washington, D.C.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-block">
+      <p class="cv-heading">Education</p>
+
+      <div class="cv-row">
+        <span class="cv-year">2014</span>
+        <div class="cv-content">
+          <h3>J.D.</h3>
+          <p>Harvard Law School</p>
+        </div>
+      </div>
+
+      <div class="cv-row">
+        <span class="cv-year">2009</span>
+        <div class="cv-content">
+          <h3>B.A., Political Science, <em>magna cum laude</em></h3>
+          <p>Tufts University &middot; Thesis Honors</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-block">
+      <p class="cv-heading">Bar and Court Admissions</p>
+
+      <div class="cv-row">
+        <span class="cv-year">&nbsp;</span>
+        <div class="cv-content">
+          <p>California (2023)<br>
+             District of Columbia (2015)<br>
+             Massachusetts (2014)<br>
+             Supreme Court of the United States (2023)<br>
+             U.S. Court of Appeals, First Circuit (2019)<br>
+             U.S. Court of Appeals, Tenth Circuit (2018)<br>
+             U.S. District Court, Northern District of California (2026)<br>
+             U.S. District Court, District of Massachusetts (2015)</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="assets/shapanka-cv.pdf" class="btn btn-outline">Download Full CV (PDF)</a>
+  </div>
+</section>
+
+<!-- ══════════════════════ SPEAKING ═════════════════════════ -->
+<section id="speaking">
+  <div class="container">
+    <p class="section-label">Speaking</p>
+    <h2>Events &amp; Appearances</h2>
+    <ul class="events-list">
+
+      <li class="event-item">
+        <span class="event-date">Jun 2026</span>
+        <div>
+          <span class="event-title">Speaker — “Washington Playbook: Practical Strategies for Tech Companies in a Shifting Regulatory Climate”</span>
+          <p class="event-venue">23rd Annual Digital Economy Best Practices Conference, Stanford Law School &middot; Stanford, CA</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Jan 2026</span>
+        <div>
+          <span class="event-title">Speaker — “Cloud and Edge Computing, Hyperscale Data Centers, and Cloud Infrastructure”</span>
+          <p class="event-venue">Covington 2026 Tech Forum, Covington &amp; Burling LLP &middot; Webinar</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Mar 2025</span>
+        <div>
+          <span class="event-title">Host — “Fireside Chat” with former U.S. Attorney General Eric Holder</span>
+          <p class="event-venue">Bay Area Life Sciences Symposium, Covington &amp; Burling LLP &middot; San Francisco, CA</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Feb 2025</span>
+        <div>
+          <span class="event-title">Speaker — Challenges &amp; Opportunities in the 119th Congress</span>
+          <p class="event-venue">Business for America &middot; Webinar</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Oct 2024</span>
+        <div>
+          <span class="event-title">Speaker — Impact of the U.S. Elections on the Tech Industry</span>
+          <p class="event-venue">Covington &amp; Burling LLP &middot; Webinar</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Jun 2024</span>
+        <div>
+          <span class="event-title">Speaker — Electoral Count Reform Act</span>
+          <p class="event-venue">League of Women Voters Electoral College Committee &middot; Webinar</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">May 2024</span>
+        <div>
+          <span class="event-title">Session Lead — U.S. Electoral College Reform</span>
+          <p class="event-venue">Leadership Now Project Annual Meeting &middot; New York, NY</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Apr 2024</span>
+        <div>
+          <span class="event-title">Invited Participant — Electoral College Symposium: What’s to Be Done?</span>
+          <p class="event-venue">Ash Center for Democratic Governance and Innovation, Harvard Kennedy School &middot; Cambridge, MA</p>
+        </div>
+      </li>
+
+      <li class="event-item">
+        <span class="event-date">Jun 2018</span>
+        <div>
+          <span class="event-title">Invited Speaker — National Association of Secretaries of State, Elections Committee</span>
+          <p class="event-venue">National Association of Secretaries of State &middot; Santa Fe, NM</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════ CONTACT ══════════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label">Contact</p>
+    <h2>Get in Touch</h2>
+
+    <div class="contact-grid">
+
+      <!-- Left column: info + social -->
+      <div>
+        <div class="contact-block">
+          <h3>Location</h3>
+          <p>San Francisco &amp; Washington, DC</p>
+        </div>
+
+        <div class="contact-block">
+          <h3>Connect</h3>
+          <ul class="social-list">
+
+            <li>
+              <!-- Update href to your LinkedIn profile URL -->
+              <a href="https://linkedin.com/in/mshapanka" target="_blank" rel="noopener noreferrer">
+                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 1 1 0-4.126 2.063 2.063 0 0 1 0 4.126zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn
+              </a>
+            </li>
+
+            <li>
+              <a href="https://www.cov.com/en/professionals/s/matthew-shapanka" target="_blank" rel="noopener noreferrer">
+                <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/>
+                </svg>
+                Professional Bio
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right column: Formspree contact form -->
+      <div>
+        <form action="https://formspree.io/f/xbdewqpj" method="POST">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What is this regarding?">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Your message…"></textarea>
+          </div>
+          <!-- Honeypot spam filter — keep hidden -->
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Matthew S. Shapanka &middot; All rights reserved</p>
+  </div>
+</footer>
+
+</body>
+</html>
