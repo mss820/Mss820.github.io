@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Local transcript work — this repo is published at mattshapanka.com,
+# so transcripts and caption files stay out of version control.
+*.srt
+*.vtt
+*.info.json
+transcript.md
+transcripts/
