@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{TITLE}}</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #f6f6f6; color: #111;
+  }
+  .card {
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 6px;
+    padding: 2.5rem; max-width: 340px; width: 90%; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 1.05rem; margin: 0 0 1.25rem; font-weight: 600; }
+  input {
+    width: 100%; padding: .65rem .8rem; border: 1px solid #ccc; border-radius: 4px;
+    font-size: 1rem; background: #fff; color: #111;
+  }
+  input:focus { outline: 2px solid #1e3a5f; outline-offset: 1px; }
+  button {
+    margin-top: .9rem; width: 100%; padding: .65rem; border: none; border-radius: 4px;
+    background: #1e3a5f; color: #fff; font-size: .95rem; cursor: pointer;
+  }
+  button:hover { background: #2d5491; }
+  button:disabled { opacity: .6; cursor: default; }
+  .err { color: #a33; font-size: .85rem; margin-top: .7rem; display: none; }
+  .hint { color: #777; font-size: .78rem; margin-top: .9rem; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #111; color: #eee; }
+    .card { background: #1b1b1b; border-color: #333; }
+    input { background: #222; color: #eee; border-color: #444; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Password required</h1>
+  <form id="f" autocomplete="off">
+    <input type="password" id="pw" placeholder="Password" autofocus>
+    <button type="submit" id="btn">Unlock</button>
+    <div class="err" id="err">Incorrect password.</div>
+  </form>
+</div>
+<script>
+(function () {
+  var SALT_B64 = "{{SALT_B64}}";
+  var IV_B64 = "{{IV_B64}}";
+  var CT_B64 = "{{CIPHERTEXT_B64}}";
+  var ITER = {{ITERATIONS}};
+
+  function b64ToBytes(s) {
+    var bin = atob(s), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  var salt = b64ToBytes(SALT_B64);
+  var iv = b64ToBytes(IV_B64);
+  var ct = b64ToBytes(CT_B64);
+
+  var form = document.getElementById("f");
+  var pwInput = document.getElementById("pw");
+  var err = document.getElementById("err");
+  var btn = document.getElementById("btn");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    err.style.display = "none";
+    btn.disabled = true;
+    btn.textContent = "Unlocking…";
+    try {
+      var keyMaterial = await crypto.subtle.importKey(
+        "raw", new TextEncoder().encode(pwInput.value), { name: "PBKDF2" }, false, ["deriveKey"]
+      );
+      var key = await crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
+        keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
+      );
+      var plainBuf = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
+      var html = new TextDecoder().decode(plainBuf);
+      document.open();
+      document.write(html);
+      document.close();
+    } catch (ex) {
+      btn.disabled = false;
+      btn.textContent = "Unlock";
+      err.style.display = "block";
+    }
+  });
+})();
+</script>
+</body>
+</html>
